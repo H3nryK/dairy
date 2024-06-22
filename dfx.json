@@ -1,0 +1,17 @@
+{
+  "canisters": {
+    "dairy_backend": {
+      "candid": "src/dairy_backend/dairy_backend.did",
+      "package": "dairy_backend",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

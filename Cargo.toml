@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/dairy_backend"
+]
+resolver = "2"
