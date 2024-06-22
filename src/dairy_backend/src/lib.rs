@@ -1,4 +1,4 @@
-use candid::{CandidType, Deserialize, export_service};
+use candid::{CandidType, Deserialize};
 use ic_cdk_macros::*;
 use std::cell::RefCell;
 
