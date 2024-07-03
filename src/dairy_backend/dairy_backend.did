@@ -1,11 +1,15 @@
 type Cow = record {
-  id : nat64;
-  age : nat64;
-  name : text;
-  milk_produced : nat64;
+  id: nat64;
+  name: text;
+  age: nat64;
+  milk_produced: nat64;
 };
+
 service : {
-  add_cow : (nat64, text, nat64) -> ();
-  get_cow : (nat64) -> (opt Cow) query;
-  record_milk_production : (nat64, nat64) -> ();
+  add_cow: (nat64, text, nat64) -> ();
+  remove_cow: (nat64) -> (bool);
+  record_milk_production: (nat64, nat64) -> (bool);
+  get_cow: (nat64) -> (opt Cow);
+  list_cows: () -> (vec Cow) query;
+  get_total_milk_produced: () -> (nat64) query;
 }
