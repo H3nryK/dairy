@@ -1,18 +1,12 @@
 # Dairy Farming Project on Internet Computer Blockchain
 
-This project is a backend canister written in Rust for managing dairy farming operations, including adding cows, recording milk production, and retrieving cow data. The canister is deployed on the Internet Computer (IC) blockchain.
+This project implements a backend canister written in Rust for managing dairy farming operations on the Internet Computer (IC) blockchain. It includes functionality for adding cows, updating cow information, recording milk production, and retrieving cow data.
 
 ## Prerequisites
 
 - [DFINITY SDK](https://sdk.dfinity.org/)
-- [Rust](https://www.rust-lang.org/)
-- [Cargo](https://doc.rust-lang.org/cargo/)
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Rust Canister Development Guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
-- [ic-cdk](https://docs.rs/ic-cdk)
-- [ic-cdk-macros](https://docs.rs/ic-cdk-macros)
-- [Candid Introduction](https://internetcomputer.org/docs/current/developer-docs/backend/candid/)
+- [Rust](https://www.rust-lang.org/) (latest stable version)
+- [Cargo](https://doc.rust-lang.org/cargo/) (comes with Rust)
 
 ## Project Setup
 
@@ -22,68 +16,87 @@ This project is a backend canister written in Rust for managing dairy farming op
 sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 ```
 
-### 2. Install Rust
+### 2. Install Rust and add the WebAssembly target
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup update stable
 rustup target add wasm32-unknown-unknown
 ```
 
-### 3. Clone the Project
+### 3. Clone and Navigate to the Project
 
 ```bash
-Copy code
-git clone https://github.com/H3nryK/dairy.git
+git clone https://github.com/YourUsername/dairy.git
 cd dairy
 ```
 
-### 4. Create the Project Structure
+### 4. Project Structure
 
-```bash
-Copy code
-dfx new dairy_farming
-cd dairy_farming
+Ensure your project has the following structure:
+
+```
+dairy/
+├── Cargo.toml
+├── dfx.json
+└── src/
+    └── dairy_backend/
+           ├── src
+           |    └── lib.rs
+           └── dairy_backend.did
 ```
 
 ### 5. Update Cargo.toml
 
-Edit Cargo.toml to include the necessary dependencies:
+Ensure your `Cargo.toml` contains the following:
 
-```bash
+```toml
 [package]
 name = "dairy_backend"
 version = "0.1.0"
-edition = "2018"
-
-[dependencies]
-ic-cdk = "0.14.0"
-ic-cdk-macros = "0.14.0"
-candid = "0.10.9"
-serde = "1.0"
-serde_derive = "1.0"
-serde_json = "1.0"
+edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
+
+[dependencies]
+candid = "0.8.4"
+ic-cdk = "0.7.0"
+ic-cdk-macros = "0.6.0"
+serde = "1.0.152"
 ```
 
-### 6. Implement the Canister Logic
+### 6. Update dfx.json
 
-Edit the `lib.rs` file.
+Ensure your `dfx.json` contains the following:
 
-### 7. Generate the Candid Interface
+```json
+{
+  "canisters": {
+    "dairy_backend": {
+      "candid": "src/dairy_backend/dairy_backend.did",
+      "package": "dairy_backend",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "version": 1
+}
+```
 
-Build the project and generate the Candid interface file:
+## Building and Deploying
+
+1. Start the local Internet Computer network:
 
 ```bash
-cargo build --target wasm32-unknown-unknown --release
-cargo test -- --nocapture
+dfx start --background
 ```
 
-### 9. Deploy the Canister
-
-Deploy your canister to the local Internet Computer instance:
+2. Deploy the canister:
 
 ```bash
 dfx deploy
@@ -91,30 +104,67 @@ dfx deploy
 
 ## Interacting with the Canister
 
-1. Add a Cow
+You can interact with the canister using `dfx canister call` commands:
+
+1. Add a Cow:
 
 ```bash
-dfx canister call dairy_backend add_cow '(1, "Bessie", 4)'
+dfx canister call dairy_backend add_cow '("Bessie", 4)'
 ```
 
-2. Record Milk Production
+2. Update a Cow:
+
+```bash
+dfx canister call dairy_backend update_cow '(1, opt "Daisy", opt 5)'
+```
+
+3. Record Milk Production:
 
 ```bash
 dfx canister call dairy_backend record_milk_production '(1, 10)'
 ```
 
-3. Get Cow Details
+4. Get Cow Details:
 
 ```bash
 dfx canister call dairy_backend get_cow '(1)'
 ```
 
-## Accessing the Candid UI
-
-You can access the Candid UI to interact with your canister at:
+5. Get All Cows:
 
 ```bash
-http://localhost:8000/?canisterId=<your-canister-id>
+dfx canister call dairy_backend get_all_cows
 ```
 
-Replace <your-canister-id> with the actual canister ID obtained from the deployment process.
+6. Update Health Status:
+
+```bash
+dfx canister call dairy_backend update_health_status '(1, "Excellent")'
+```
+
+7. Get Total Milk Production:
+
+```bash
+dfx canister call dairy_backend get_total_milk_production
+```
+These operations allow for complete management of cow records in the dairy farming system.
+
+## Accessing the Candid UI
+
+You can access the Candid UI to interact with your canister visually. After deploying, the console will display a link similar to:
+
+```
+http://127.0.0.1:8000/?canisterId=<canister-id>
+```
+
+Replace `<canister-id>` with the actual canister ID from the deployment output.
+
+## Development Resources
+
+- [Internet Computer Developer Documentation](https://internetcomputer.org/docs/current/developer-docs/)
+- [Rust Canister Development Guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
+- [Candid Guide](https://internetcomputer.org/docs/current/developer-docs/backend/candid/)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
