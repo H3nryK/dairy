@@ -1,11 +1,10 @@
-type Cow = record {
-  id : nat64;
-  age : nat64;
-  name : text;
-  milk_produced : nat64;
-};
 service : {
-  add_cow : (nat64, text, nat64) -> ();
-  get_cow : (nat64) -> (opt Cow) query;
-  record_milk_production : (nat64, nat64) -> ();
+    "add_cow": (text, nat64) -> (record {id:nat64; name:text; age:nat64; milk_produced:nat64; health_status:text});
+    "update_cow": (nat64, opt text, opt nat64) -> (opt record {id:nat64; name:text; age:nat64; milk_produced:nat64; health_status:text});
+    "delete_cow": (nat64) -> (bool);
+    "record_milk_production": (nat64, nat64) -> (opt nat64);
+    "get_cow": (nat64) -> (opt record {id:nat64; name:text; age:nat64; milk_produced:nat64; health_status:text}) query;
+    "get_all_cows": () -> (vec record {id:nat64; name:text; age:nat64; milk_produced:nat64; health_status:text}) query;
+    "update_health_status": (nat64, text) -> (opt record {id:nat64; name:text; age:nat64; milk_produced:nat64; health_status:text});
+    "get_total_milk_production": () -> (nat64) query;
 }
